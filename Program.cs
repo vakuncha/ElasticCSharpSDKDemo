@@ -44,7 +44,15 @@ namespace ElasticSDKDemo
             elasticMonitorResource.Properties.UserInfo.LastName = "kunchakuri";
             elasticMonitorResource.Properties.UserInfo.EmailAddress = "sdkdemo@mpliftrelastic20210901outlo.onmicrosoft.com";
 
-            microsoftElasticClient.Monitors.BeginCreate("vakuncha-test-rg", "csharpsdkCreate-"+ new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds(),elasticMonitorResource);
+            string resourceName = "csharpsdkCreate-" + new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+
+            microsoftElasticClient.Monitors.Create("vakuncha-test-rg", resourceName, elasticMonitorResource);
+
+            MonitoringTagRulesProperties monitoringTagRulesProperties = new MonitoringTagRulesProperties();
+            monitoringTagRulesProperties.LogRules = new LogRules();
+            monitoringTagRulesProperties.LogRules.SendSubscriptionLogs = true;
+            monitoringTagRulesProperties.LogRules.SendActivityLogs = true;
+            microsoftElasticClient.TagRules.CreateOrUpdate("vakuncha-test-rg",resourceName, "default",monitoringTagRulesProperties);
         }
 
     }
